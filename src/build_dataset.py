@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import torch
-
+import csv
+import pandas as pd
+    
 # Create *known* parameters
 weight = 0.7
 bias = 0.3
@@ -26,4 +28,16 @@ y_train = y[:train_split]
 X_test, y_test = X[train_split:], y[train_split:]
 
 print(len(X_train), len(y_train), len(X_test), len(y_test)) 
+
+#writing in csv file
+train_data = {
+        'X': X_train.squeeze().numpy(),
+        'y': y_train.squeeze().numpy()
+}
+
+df = pd.DataFrame(train_data)
+df.to_csv('../Dataset/train_data.csv', index=[0, len(X)])
+
+print(df)
+
 
