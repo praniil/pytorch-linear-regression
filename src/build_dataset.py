@@ -35,9 +35,14 @@ train_data = {
         'y': y_train.squeeze().numpy()
 }
 
-df = pd.DataFrame(train_data)
-df.to_csv('../Dataset/train_data.csv', index=[0, len(X)])
+train_df = pd.DataFrame(train_data)
+train_df.to_csv('../Dataset/train_data.csv', index=[0, len(X)])
 
-print(df)
+test_data = {
+    'X': X_test.squeeze().numpy(),
+    'y': y_test.squeeze().numpy()
+}
 
+test_df = pd.DataFrame(test_data)
+test_df.to_csv('../Dataset/test_data.csv', index=True)
 
