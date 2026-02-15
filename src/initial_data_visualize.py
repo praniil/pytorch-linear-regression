@@ -36,6 +36,9 @@ def plot_predictions(train_data=train_features_x,
 
   # Show the legend
   plt.legend(prop={"size": 14})
-  plt.savefig("../Results/initail_data_visualization.png")
+  plt.savefig("../Results/initial_data_visualization.png")
 
-plot_predictions()
+
+
+if __name__ == "__main__":
+    plot_predictions()
