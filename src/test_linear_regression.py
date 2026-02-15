@@ -1,6 +1,8 @@
 from build_model import LinearRegressionModel
 import torch
 import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 # instantiate a fresh instance of LinearRegressionModel
 loaded_model = LinearRegressionModel()
@@ -24,4 +26,43 @@ loaded_model.eval()
 with torch.inference_mode():
     loaded_model_pred = loaded_model(X_test)
 y_preds = loaded_model_pred
-print(y_preds)
+
+# Calculate test loss
+loss_function = torch.nn.L1Loss()
+test_loss = loss_function(y_preds, y_test)
+
+# Print results
+print(f"Test Loss (MAE): {test_loss.item():.4f}")
+print(f"\nSample Predictions (first 10):")
+print(y_preds[:10])
+
+# Save predictions to CSV
+results_df = pd.DataFrame({
+    'X_test': test_data['X'].values,
+    'y_actual': test_data['y'].values,
+    'y_predicted': y_preds.cpu().numpy().flatten()
+})
+results_df.to_csv("../Results/test_predictions.csv", index=False)
+print(f"\nPredictions saved to ../Results/test_predictions.csv")
+
+# Create visualization
+plt.figure(figsize=(10, 7))
+plt.scatter(train_data['X'], train_data['y'], c="b", s=2, label="Training data", alpha=0.4)
+plt.scatter(test_data['X'], test_data['y'], c="g", s=4, label="Testing data (actual)")
+plt.scatter(test_data['X'], y_preds.cpu().numpy(), c="r", s=4, label="Predictions")
+plt.xlabel("X")
+plt.ylabel("y")
+plt.title(f"Linear Regression Results\nTest Loss (MAE): {test_loss.item():.4f}")
+plt.legend(prop={"size": 12})
+plt.savefig("../Results/test_results_visualization.png", dpi=300, bbox_inches='tight')
+print(f"Visualization saved to ../Results/test_results_visualization.png")
+
+# Save test metrics
+metrics = {
+    'Test Loss (MAE)': [test_loss.item()],
+    'Number of Test Samples': [len(test_data)],
+    'Timestamp': [datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
+}
+metrics_df = pd.DataFrame(metrics)
+metrics_df.to_csv("../Results/test_metrics.csv", index=False)
+print(f"Test metrics saved to ../Results/test_metrics.csv")
